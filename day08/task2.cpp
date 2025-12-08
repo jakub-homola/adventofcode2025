@@ -5,10 +5,12 @@
 int main()
 {
     timer tm;
+    timer tm_load, tm_distcalc, tm_sort, tm_unionfind;
     tm.start();
 
     std::vector<std::string> input = read_lines();
 
+    tm_load.start();
     std::vector<Point3<int64_t>> points;
     points.reserve(input.size());
     for(std::string line : input) {
@@ -16,12 +18,14 @@ int main()
         sscanf(line.c_str(), "%ld,%ld,%ld", &pt.x, &pt.y, &pt.z);
         points.push_back(pt);
     }
+    tm_load.stop();
 
     struct distinfo {
         size_t idx1;
         size_t idx2;
         int64_t dist;
     };
+    tm_distcalc.start();
     std::vector<distinfo> dists;
     for(size_t i = 0; i < points.size(); i++) {
         for(size_t j = i+1; j < points.size(); j++) {
@@ -30,8 +34,13 @@ int main()
             dists.push_back(distinfo{i, j, dist});
         }
     }
+    tm_distcalc.stop();
 
+    tm_sort.start();
     std::sort(dists.begin(), dists.end(), [](const distinfo & dil, const distinfo & dir){ return dil.dist < dir.dist; });
+    tm_sort.stop();
+
+    tm_unionfind.start();
 
     std::vector<int64_t> unionfind(points.size());
     for(size_t i = 0; i < unionfind.size(); i++) unionfind[i] = i;
@@ -74,10 +83,16 @@ int main()
         }
     }
 
+    tm_unionfind.stop();
+
     printf("%ld\n", result);
 
     tm.stop();
-    printf("Time: %.3f ms\n", tm.get_time_ms());
+    printf("Time:              %12.3f ms\n", tm.get_time_ms());
+    printf("Time tm_load:      %12.3f ms\n", tm_load.get_time_ms());
+    printf("Time tm_distcalc:  %12.3f ms\n", tm_distcalc.get_time_ms());
+    printf("Time tm_sort:      %12.3f ms\n", tm_sort.get_time_ms());
+    printf("Time tm_unionfind: %12.3f ms\n", tm_unionfind.get_time_ms());
 
     return 0;
 }
