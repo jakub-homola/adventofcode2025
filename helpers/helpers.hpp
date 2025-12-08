@@ -341,6 +341,28 @@ bool operator!=(const Point2<T> & l, const Point2<T> & r)
 
 
 template<typename T = int>
+struct Point3
+{
+    T x;
+    T y;
+    T z;
+    Point3(){}
+    Point3(T x_, T y_, T z_) : x{x_}, y{y_}, z{z_} {}
+    template<typename U = T>
+    U magnitude2() { return U{x}*U{x} + U{y}*U{y} + U{z}*U{z}; }
+    template<typename U = T>
+    U magnitude() { return std::sqrt(magnitude2()); }
+};
+template<typename T>
+Point3<T> operator-(const Point3<T> & pl, const Point3<T> & pr)
+{
+    return Point3<T>(pl.x - pr.x, pl.y - pr.y, pl.z - pr.z);
+}
+
+
+
+
+template<typename T = int>
 struct Loc2
 {
     T r;
