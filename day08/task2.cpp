@@ -69,6 +69,7 @@ int main()
             num_connections_done++;
             if(num_connections_done == points.size() - 1) {
                 result = points[dists[i].idx1].x * points[dists[i].idx2].x;
+                break;
             }
         }
     }
